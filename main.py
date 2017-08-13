@@ -21,8 +21,11 @@ if __name__ == '__main__':
         if continue_search.lower() == 'q':
             break
         
+        print("Enter the directory the new pdf will be placed: ", end = '')
         new_pdf_location = functions.get_directory()
         os.chdir(new_pdf_location)
+        
+        filename = input('Enter the filename of the new pdf: ')
         
         select_mode = functions.get_file_select_mode()
         pdf_writer = PyPDF2.PdfFileWriter
@@ -40,6 +43,15 @@ if __name__ == '__main__':
                 pdf_locations.append(location)
                 
             for location in pdf_locations:
-                pass
-
-            
+                temp_reader = PyPDF2.PdfFileReader(open(location, 'rb'))
+                for page_num in range(temp_reader.numPages):
+                    pdf_writer.addPage(temp_reader.getPage(page_num))
+        
+        
+        
+        #Create new pdf after getting all previous pdf files
+        new_pdf = open(filename, 'wb')
+        pdf_writer.write(new_pdf)
+        new_pdf.close()
+        
+                
